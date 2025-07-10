@@ -9,7 +9,7 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        $permissions = Permission::latest()->paginate(10);
+        $permissions = Permission::withCount('roles')->get();
         return view('permissions.index', compact('permissions'));
     }
 
@@ -27,7 +27,7 @@ class PermissionController extends Controller
         Permission::create(['name' => $request->name]);
         
         return redirect()
-            ->route('permissions.index')
+            ->route('admin.permissions.index')
             ->with('success', 'Permission created successfully');
     }
 
@@ -45,16 +45,23 @@ class PermissionController extends Controller
         $permission->update(['name' => $request->name]);
         
         return redirect()
-            ->route('permissions.index')
+            ->route('admin.permissions.index')
             ->with('success', 'Permission updated successfully');
     }
 
     public function destroy(Permission $permission)
     {
+        if ($permission->roles()->count() > 0) {
+            return redirect()
+                ->route('admin.permissions.index')
+                ->with('error', 'Cannot delete permission — it is assigned to roles.');
+        }
+
         $permission->delete();
-        
+
         return redirect()
-            ->route('permissions.index')
-            ->with('success', 'Permission deleted successfully');
+            ->route('admin.permissions.index')
+            ->with('success', 'Permission deleted successfully.');
     }
+
 }

@@ -66,7 +66,7 @@
                     href="javascript:void(0);"
                     data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="../assets/img/f2.jpg" alt class="rounded-circle" />
+                      <img src="{{asset('assets/img/f2.jpg')}}" alt class="rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -75,11 +75,11 @@
                         <div class="d-flex align-items-center">
                           <div class="flex-shrink-0 me-2">
                             <div class="avatar avatar-online">
-                              <img src="../assets/img/f2.jpg" alt class="rounded-circle" />
+                              <img src="{{asset('assets/img/f2.jpg')}}" alt class="rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
-                            <h6 class="mb-0">John Doe</h6>
+                            <h6 class="mb-0">{{ Auth::user()->name }}</h6>
                             <small class="text-body-secondary">Admin</small>
                           </div>
                         </div>

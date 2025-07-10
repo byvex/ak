@@ -10,7 +10,7 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::latest()->paginate(10);
+        $roles = Role::withCount('users')->get();
         return view('roles.index', compact('roles'));
     }
 
@@ -28,7 +28,7 @@ class RoleController extends Controller
         Role::create(['name' => $request->name]);
         
         return redirect()
-            ->route('roles.index')
+            ->route('admin.roles.index')
             ->with('success', 'Role created successfully');
     }
 
@@ -61,16 +61,29 @@ class RoleController extends Controller
         $role->syncPermissions($validPermissions);
 
         return redirect()
-            ->route('roles.index')
+            ->route('admin.roles.index')
             ->with('success', 'Role updated successfully');
     }
 
     public function destroy(Role $role)
     {
+        if (strtolower($role->name) === 'admin') {
+            return redirect()
+                ->route('admin.roles.index')
+                ->with('error', 'The admin role cannot be deleted.');
+        }
+
+        if ($role->users()->count() > 0) {
+            return redirect()
+                ->route('admin.roles.index')
+                ->with('error', 'Cannot delete role — it is assigned to users.');
+        }
+
         $role->delete();
-        
+
         return redirect()
-            ->route('roles.index')
-            ->with('success', 'Role deleted successfully');
+            ->route('admin.roles.index')
+            ->with('success', 'Role deleted successfully.');
     }
+
 }

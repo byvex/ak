@@ -1,9 +1,9 @@
 <x-app-layout>
 @if(isset($role))
-<form action="{{ route('roles.update', $role) }}" method="POST">
+<form action="{{ route('admin.roles.update', $role) }}" method="POST">
     @method('PUT')
 @else
-<form action="{{ route('roles.store') }}" method="POST">
+<form action="{{ route('admin.roles.store') }}" method="POST">
 @endif
     @csrf
     <div class="card">
