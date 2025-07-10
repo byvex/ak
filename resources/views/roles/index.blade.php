@@ -40,23 +40,30 @@
                                 <span class="badge bg-primary">{{ $permission->name }}</span>
                                 @endforeach
                             </td>
-                            <td>
-                                <a href="{{ route('admin.role-permissions.index', $role) }}" class="btn btn-sm btn-info">Permissions</a>
-                                @can('manage roles')
-                                <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-sm btn-warning">Edit</a>
+                           <td>
+    <a href="{{ route('admin.role-permissions.index', $role) }}" class="btn btn-sm btn-info">Permissions</a>
 
-                                {{-- Protect admin role --}}
-                                @if(strtolower($role->name) !== 'admin')
-                                <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger delete-btn">Delete</button>
-                                </form>
-                                @else
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="Swal.fire('Protected!', 'The admin role cannot be deleted.', 'info')">Delete</button>
-                                @endif
-                                @endcan
-                            </td>
+    @can('manage roles')
+
+        {{-- Only show Edit button if not admin --}}
+        @if(strtolower($role->name) !== 'admin')
+            <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-sm btn-warning">Edit</a>
+
+            {{-- Delete button --}}
+            <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="btn btn-sm btn-danger delete-btn">Delete</button>
+            </form>
+        @else
+            {{-- Show disabled Edit/Delete buttons for admin --}}
+            <button type="button" class="btn btn-sm btn-secondary" onclick="Swal.fire('Protected!', 'The admin role cannot be edited.', 'info')">Edit</button>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="Swal.fire('Protected!', 'The admin role cannot be deleted.', 'info')">Delete</button>
+        @endif
+
+    @endcan
+</td>
+
                         </tr>
                         @endforeach
                     </tbody>
